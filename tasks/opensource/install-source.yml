@@ -2,21 +2,6 @@
 - name: Check for build tools
   when: nginx_install_source_build_tools | bool
   block:
-    - name: (Alpine Linux) Install build tools
-      community.general.apk:
-        name:
-          - alpine-sdk
-          - build-base
-          - git
-          - openrc
-          - perl
-          - python3
-          - linux-headers
-          - tar
-          - wget
-        update_cache: true
-      when: ansible_facts['os_family'] == 'Alpine'
-
     - name: (AlmaLinux/Amazon Linux/CentOS/Oracle Linux/RHEL/Rocky Linux) Set up build tools
       when: ansible_facts['os_family'] == 'RedHat'
       block:
@@ -65,31 +50,6 @@
               - zlib-devel
             update_cache: true
 
-    - name: (Debian/Ubuntu) Install build tools
-      ansible.builtin.apt:
-        name:
-          - build-essential
-          - checkinstall
-          - libtemplate-perl
-          - python3-minimal
-          - perl
-          - tar
-          - zlib1g-dev
-        update_cache: true
-      when: ansible_facts['os_family'] == 'Debian'
-
-    - name: (SLES) Install build tools
-      community.general.zypper:
-        name:
-          - awk
-          - gcc
-          - gzip
-          - make
-          - tar
-          - zlib-devel
-        update_cache: true
-      when: ansible_facts['os_family'] == 'Suse'
-
 - name: Check for source installs
   block:
     - name: Check for PCRE install
@@ -121,18 +81,6 @@
         name: "{{ (pcre_release == 2) | ternary('pcre2-devel', 'pcre-devel') }}"
         update_cache: true
       when: ansible_facts['os_family'] == 'RedHat'
-
-    - name: (Debian/Ubuntu) Install PCRE dependency from package
-      ansible.builtin.apt:
-        name: "{{ (pcre_release == 2) | ternary('libpcre2-dev', 'libpcre3-dev') }}"
-        update_cache: true
-      when: ansible_facts['os_family'] == 'Debian'
-
-    - name: (SLES) Install PCRE dependency from package
-      community.general.zypper:
-        name: "{{ (pcre_release == 2) | ternary('pcre2-devel', 'pcre-devel') }}"
-        update_cache: true
-      when: ansible_facts['os_family'] == 'Suse'
 
 - name: Install PCRE dependence from source
   when:
@@ -179,29 +127,12 @@
 - name: Install ZLib dependency from package
   when: not nginx_install_source_zlib | bool
   block:
-    - name: (Alpine Linux) Install ZLib dependency from package
-      community.general.apk:
-        name: zlib-dev
-        update_cache: true
-      when: ansible_facts['os_family'] == 'Alpine'
 
     - name: (AlmaLinux/Amazon Linux/CentOS/Oracle Linux/RHEL/Rocky Linux) Install ZLib dependency from package
       ansible.builtin.yum:
         name: zlib-devel
         update_cache: true
       when: ansible_facts['os_family'] == 'RedHat'
-
-    - name: (Debian/Ubuntu) Install ZLib dependency from package
-      ansible.builtin.apt:
-        name: zlib1g-dev
-        update_cache: true
-      when: ansible_facts['os_family'] == 'Debian'
-
-    - name: (SLES) Install ZLib dependency from package
-      community.general.zypper:
-        name: zlib-devel
-        update_cache: true
-      when: ansible_facts['os_family'] == 'Suse'
 
 - name: Install ZLib dependency from source
   when:
@@ -248,29 +179,12 @@
 - name: Install OpenSSL dependency from package
   when: not nginx_install_source_openssl | bool
   block:
-    - name: (Alpine Linux) Install OpenSSL dependency from package
-      community.general.apk:
-        name: openssl-dev
-        update_cache: true
-      when: ansible_facts['os_family'] == 'Alpine'
 
     - name: (AlmaLinux/Amazon Linux/CentOS/Oracle Linux/RHEL/Rocky Linux) Install OpenSSL dependency from package
       ansible.builtin.yum:
         name: openssl-devel
         update_cache: true
       when: ansible_facts['os_family'] == 'RedHat'
-
-    - name: (Debian/Ubuntu) Install OpenSSL dependency from package
-      ansible.builtin.apt:
-        name: libssl-dev
-        update_cache: true
-      when: ansible_facts['os_family'] == 'Debian'
-
-    - name: (SLES) Install OpenSSL dependency from package
-      community.general.zypper:
-        name: openssl-devel
-        update_cache: true
-      when: ansible_facts['os_family'] == 'Suse'
 
 - name: Install OpenSSL dependency from source
   when:

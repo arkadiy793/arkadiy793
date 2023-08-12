@@ -6,12 +6,6 @@
     {{ option }}
 {% endfor %}
     postrotate
-{% if ansible_facts['os_family'] == "Debian" %}
-        if [ -f /var/run/nginx.pid ]; then
-            kill -USR1 `cat /var/run/nginx.pid`
-        fi
-{% else %}
         nginx -s reopen
-{% endif %}
     endscript
 }

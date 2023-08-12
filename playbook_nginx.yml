@@ -1,0 +1,19 @@
+---
+- name: Install Nginx
+  hosts: all
+  become: yes
+  vars:
+    nginx_setup: present
+    nginx_selinux: false
+    nginx_enable: true
+    nginx_install_from: nginx_repository
+    nginx_amplify_enable: false
+    nginx_type: opensource
+    nginx_manage_repo: true
+    nginx_branch: stable
+    nginx_service_modify: false
+    nginx_debug_output: false
+    nginx_logrotate_conf_enable: false
+    
+  roles:
+    - role: /home/vas/ansible-role-nginx

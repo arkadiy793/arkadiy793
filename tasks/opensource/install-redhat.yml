@@ -3,13 +3,13 @@
   ansible.builtin.yum_repository:
     name: nginx
     baseurl: "{{ nginx_repository | default(lookup('vars', 'nginx_default_repository_' + ((ansible_facts['distribution'] == 'Amazon') | ternary('amazon', 'redhat')))) }}"
-    description: NGINX Repository
+    description: NGINX repo
     enabled: true
     gpgcheck: true
     mode: "0644"
-    module_hotfixes: true
+    #module_hotfixes: true
     state: "{{ (nginx_state == 'uninstall') | ternary('absent', 'present') }}"
-  when: nginx_manage_repo | bool
+  when: (ansible_distribution == 'Amazon' or ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS' or ansible_distribution == 'OracleLinux' or ansible_distribution == 'AlmaLinux' or ansible_distribution == 'Rocky') and (nginx_install_from == 'nginx_repository') and (nginx_manage_repo | bool)
 
 - name: (AlmaLinux/Amazon Linux/CentOS/Oracle Linux/RHEL/Rocky Linux) Force Yum cache refresh
   ansible.builtin.command: yum clean metadata
