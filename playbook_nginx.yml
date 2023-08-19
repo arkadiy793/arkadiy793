@@ -16,4 +16,4 @@
     nginx_logrotate_conf_enable: false
     
   roles:
-    - role: /home/vas/ansible-role-nginx
+    - role: /home/user/ansible-role-nginx
